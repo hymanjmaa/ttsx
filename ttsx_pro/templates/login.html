@@ -1,56 +1,96 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
-<head>
-	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-	<title>天天生鲜-登录</title>
-	<link rel="stylesheet" type="text/css" href="css/reset.css">
-	<link rel="stylesheet" type="text/css" href="css/main.css">
-</head>
-<body>
-	<div class="login_top clearfix">
-		<a href="index.html" class="login_logo"><img src="images/logo02.png"></a>	
-	</div>
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block custom_title %}
+    <title>天天生鲜-登录</title>
+{% endblock %}
+{% block custom_css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/reset.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+{% endblock %}
+{% block script %}
+    <script>
+    $(function () {
+        var error_name = false;
+        var error_pwd = false;
+        $('.name_input').blur(function () {
+            check_user_name();
+        });
+        $('.pass_input').blur(function () {
+            check_pwd();
+        });
+        function check_user_name() {
+            var len = $('.name_input').val().length;
+            if (len < 5 || len > 20) {
+                $('.name_input').next().html('请输入5-20个字符的用户名');
+                $('.name_input').next().show();
+                error_name = true
+            }
+            else {
+                $('.name_input').next().hide();
+                error_name = false;
+            }
+        }
+        function check_pwd() {
+            var len = $('.pass_input').val().length;
+            if (len < 8 || len > 20) {
+                $('.pass_input').next().html('密码最少8位，最长20位');
+                $('.pass_input').next().show();
+                error_pwd = true
+            }
+            else {
+                $('.pass_input').next().hide();
+                error_pwd = false;
+            }
+        }
+        $('#login_form').submit(function () {
+            check_user_name();
+            check_pwd();
+            if (error_name == false && error_pwd == false) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        })
+        if ('{{reason}}' == "1") {
+            $('.pass_input').next().html('用户名或密码错误').show();
+            error_pwd = false;
+        }
+    })
+    </script>
+{% endblock script %}
+{% block login %}
+    <div class="login_top clearfix">
+        <a href="/" class="login_logo"><img src="{% static 'images/logo02.png' %}"></a>
+    </div>
 
-	<div class="login_form_bg">
-		<div class="login_form_wrap clearfix">
-			<div class="login_banner fl"></div>
-			<div class="slogan fl">日夜兼程 · 急速送达</div>
-			<div class="login_form fr">
-				<div class="login_title clearfix">
-					<h1>用户登录</h1>
-					<a href="#">立即注册</a>
-				</div>
-				<div class="form_input">
-					<form>
-						<input type="text" name="username" class="name_input" placeholder="请输入用户名">
-						<div class="user_error">输入错误</div>
-						<input type="password" name="pwd" class="pass_input" placeholder="请输入密码">
-						<div class="pwd_error">输入错误</div>
-						<div class="more_input clearfix">
-							<input type="checkbox" name="">
-							<label>记住用户名</label>
-							<a href="#">忘记密码</a>
-						</div>
-						<input type="submit" name="" value="登录" class="input_submit">
-					</form>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<div class="footer no-mp">
-		<div class="foot_link">
-			<a href="#">关于我们</a>
-			<span>|</span>
-			<a href="#">联系我们</a>
-			<span>|</span>
-			<a href="#">招聘人才</a>
-			<span>|</span>
-			<a href="#">友情链接</a>		
-		</div>
-		<p>CopyRight © 2016 北京天天生鲜信息技术有限公司 All Rights Reserved</p>
-		<p>电话：010-****888    京ICP备*******8号</p>
-	</div>
-	
-</body>
-</html>
+    <div class="login_form_bg">
+        <div class="login_form_wrap clearfix">
+            <div class="login_banner fl"></div>
+            <div class="slogan fl">日夜兼程 · 急速送达</div>
+            <div class="login_form fr">
+                <div class="login_title clearfix">
+                    <h1>用户登录</h1>
+                    <a href="{% url 'register' %}">立即注册</a>
+                </div>
+                <div class="form_input">
+                    <form id="login_form" action="{% url 'login' %}" method="post">
+                        {% csrf_token %}
+                        {#						<input type="text" name="username" class="name_input" placeholder="请输入用户名">#}
+                        {{ login_form.username }}
+                        <div class="user_error"></div>
+                        {#						<input type="password" name="pwd" class="pass_input" placeholder="请输入密码">#}
+                        {{ login_form.password }}
+                        <div class="pwd_error"></div>
+                        <div class="more_input clearfix">
+                            <input type="checkbox" name="remember_me" value="1" checked="checked">
+                            <label>记住用户名</label>
+                            <a href="#">忘记密码</a>
+                        </div>
+                        <input type="submit" name="" value="登录" class="input_submit">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
