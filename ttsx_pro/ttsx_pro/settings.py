@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'ttsx_app',
+    'haystack',
 ]
 
 MIDDLEWARE = [
@@ -130,6 +131,20 @@ STATICFILES_DIRS = (
 )
 
 AUTH_USER_MODEL = 'ttsx_app.UserInfo'
+
+MEDIA_URL = '/static/images/goods/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR,  'static/images')
+
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.whoosh_cn_backend.WhooshEngine',
+        'PATH': os.path.join(BASE_DIR, 'whoosh_index'),
+    }
+}
+
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
+HAYSTACK_SEARCH_RESULTS_PER_PAGE = 12
 
 # LOGGING = {
 #     'version': 1,

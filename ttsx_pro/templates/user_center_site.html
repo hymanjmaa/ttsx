@@ -6,15 +6,7 @@
 
 {% block body %}
 {% include 'header.html' %}
-
-	<div class="search_bar clearfix">
-		<a href="index.html" class="logo fl"><img src="{%  static 'images/logo.png' %}"></a>
-		<div class="sub_page_name fl">|&nbsp;&nbsp;&nbsp;&nbsp;用户中心</div>
-		<div class="search_con fr">
-			<input type="text" class="input_text fl" name="" placeholder="搜索商品">
-			<input type="button" class="input_btn fr" name="" value="搜索">
-		</div>		
-	</div>
+{% include 'search_bar.html' %}
 
 	<div class="main_con clearfix">
 		<div class="left_menu_con clearfix">
@@ -30,27 +22,28 @@
 				<div class="site_con">
 					<dl>
 						<dt>当前地址：</dt>
-						<dd>北京市 海淀区 东北旺西路8号中关村软件园 （李思 收） 182****7528</dd>
+						<dd>{{ request.user.uaddress|default:'尚未录入' }} {{ request.user.ushou }}  {{ request.user.uphone }} </dd>
 					</dl>					
 				</div>
 				<h3 class="common_title2">编辑地址</h3>
 				<div class="site_con">
-					<form>
+					<form action="{% url 'center_site' %}" method="post">
+                        {% csrf_token %}
 						<div class="form_group">
 							<label>收件人：</label>
-							<input type="text" name="">
+							<input type="text" name="ushou" maxlength="20" minlength="5" required="required" placeholder="请输入收件人姓名">
 						</div>
 						<div class="form_group form_group2">
 							<label>详细地址：</label>
-							<textarea class="site_area"></textarea>
+							<textarea class="site_area" name="uaddress" required="required" ></textarea>
 						</div>
 						<div class="form_group">
 							<label>邮编：</label>
-							<input type="text" name="">
+							<input type="text" name="uyoubian" maxlength="6" minlength="6" required="required" placeholder="请输入邮政编码">
 						</div>
 						<div class="form_group">
 							<label>手机：</label>
-							<input type="text" name="">
+							<input type="text" name="uphone" maxlength="11" minlength="11" required="required" placeholder="请输入手机号码">
 						</div>
 
 						<input type="submit" name="" value="提交" class="info_submit">

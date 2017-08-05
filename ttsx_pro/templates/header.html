@@ -1,6 +1,6 @@
 <div class="header_con">
     <div class="header">
-        <div class="welcome fl">欢迎来到天天生鲜!</div>
+        <div class="welcome fl"><a href="{% url 'index' %}">欢迎来到天天生鲜!</a></div>
         <div class="fr">
             {% if request.user.is_authenticated %}
             <div class="login_btn fl">
