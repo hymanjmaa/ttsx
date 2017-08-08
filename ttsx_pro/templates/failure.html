@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block custom_title %}
+	<title>天天生鲜-抽奖</title>
+{% endblock %}
+{% block custom_css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styleCJ.css' %}">
+{% endblock %}
+{% block body %}
+{% include 'header.html' %}
+{% include 'search_bar_cart.html' %}
+{% include 'sub_header.html' %}
+
+    <div id="title">
+	<img src="{% static 'images/404.svg' %}">
+    </div>
+
+{% endblock %}

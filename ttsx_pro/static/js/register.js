@@ -47,11 +47,28 @@ $(function(){
 			error_name = true;
 		}
 		else
-		{
+        {
+            check_user_from_server();
 			$('#user_name').next().hide();
 			error_name = false;
 		}
 	}
+
+	function  check_user_from_server() {
+		$.get(
+			"/register",
+			{user_name: $('#user_name').val()},
+			function(data){
+			    if(data.validate == 'duplicate'){
+			        $('#user_name').next().html('用户名已存在')
+			        $('#user_name').next().show();
+			        error_name = true;
+                }
+                if(data.validate == 'well') {
+                    error_name = false;
+                }
+		});
+    }
 
 	function check_pwd(){
 		var len = $('#pwd').val().length;
@@ -105,7 +122,7 @@ $(function(){
 	}
 
 
-	$('#reg_form').submit(function() {
+	$('#reg_form_subcheck').submit(function() {
 		check_user_name();
 		check_pwd();
 		check_cpwd();
@@ -121,12 +138,5 @@ $(function(){
 		}
 
 	});
-
-
-
-
-
-
-
 
 })
