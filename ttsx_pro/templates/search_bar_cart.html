@@ -8,7 +8,22 @@
         </form>
     </div>
     <div class="guest_cart fr">
-        <a href="#" class="cart_name fl">我的购物车</a>
-        <div class="goods_count fl" id="show_count">1</div>
+        <a href="{% url 'cart' %}" class="cart_name fl">我的购物车</a>
+        {% if request.user.is_authenticated %}
+            <div class="goods_count fl" id="show_count">
+                {% if request.session.cart_count %}
+                    {{ request.session.cart_count }}
+                {% else %}
+                     0
+                {% endif %}
+            </div>
+            <script>
+                $.get("{% url 'calc_count' %}",function (data) {
+                    $('#show_count').text(data.count);
+                });
+            </script>
+        {% else %}
+            <div class="goods_count fl" id="show_count">0</div>
+        {% endif %}
     </div>
 </div>

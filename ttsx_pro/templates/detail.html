@@ -33,6 +33,32 @@
             num--;
             $('.num_show').val(num).blur();
         });
+        $('#add_cart').click(function () {
+            var gid=$('#gid').val();
+            var count=$('.num_show').val();
+
+                {% if request.user.is_authenticated %}
+                    $.get("{% url 'add_cart' %}",{'gid':gid,'count':count},function (data) {
+                        if(data.isok==1){
+                            var $add_x = $('#add_cart').offset().top;
+                            var $add_y = $('#add_cart').offset().left;
+
+                            var $to_x = $('#show_count').offset().top;
+                            var $to_y = $('#show_count').offset().left;
+
+                            $(".add_jump").css({'left':$add_y+80,'top':$add_x+10,'display':'block'})
+
+                            $(".add_jump").stop().animate({'left': $to_y+7, 'top': $to_x+7}, "fast", function() {
+                                $(".add_jump").fadeOut('fast');
+                            });
+                            $('#show_count').text(data.count);
+                        }
+                    });
+                {% else %}
+                    location.href="{% static 'login' %}";
+                {% endif %}
+
+        });
     });
     </script>
 {% endblock script %}
@@ -45,7 +71,7 @@
 		<a href="{% url 'index' %}">全部分类</a>
 		<span>></span>
 		<a href="{% url 'list_info' %}?id={{ goods_detail.gtype_id }}">{{ goods_detail.gtype.ttitle }}</a>
-		<span>></span>
+		<span>></span><input type="hidden" id="gid" value="{{ goods_detail.id }}">
 		<a href="{% url 'detail_info' %}??id={{ goods_detail.id }}">商品详情</a>
 	</div>
 
@@ -106,6 +132,6 @@
 			</div>
 
 		</div>
+        <div class="add_jump"></div>
 	</div>
-	<script type="text/javascript" src="{% static 'js/jquery-1.12.2.js' %}"></script>
 {% endblock %}

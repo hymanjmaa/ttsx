@@ -65,3 +65,46 @@ class GoodsInfo(models.Model):
 
     def __unicode__(self):
         return self.gtitle
+
+
+class CartInfo(models.Model):
+    user = models.ForeignKey(UserInfo, verbose_name='用户')
+    goods = models.ForeignKey(GoodsInfo, verbose_name='商品信息')
+    count = models.IntegerField(verbose_name='数量')
+
+    class Meta:
+        verbose_name = '购物车信息'
+        verbose_name_plural = verbose_name
+
+    def __unicode__(self):
+        return self.user.username
+
+
+class OrderInfo(models.Model):
+    oid = models.CharField(max_length=20, primary_key=True, verbose_name='订单号')
+    user = models.ForeignKey('UserInfo', verbose_name='用户')
+    odate = models.DateTimeField(auto_now_add=True, verbose_name='订单日期')
+    oIsPay = models.BooleanField(default=False, verbose_name='支付方式')
+    ototal = models.DecimalField(max_digits=6, decimal_places=2, verbose_name='订单总价')
+    oaddress = models.CharField(max_length=150, verbose_name='订单地址')
+
+    class Meta:
+        verbose_name = '订单信息'
+        verbose_name_plural = verbose_name
+
+    def __unicode__(self):
+        return self.oid
+
+
+class OrderDetailInfo(models.Model):
+    goods = models.ForeignKey('GoodsInfo', verbose_name='订单商品')
+    order = models.ForeignKey(OrderInfo, verbose_name='订单信息')
+    price = models.DecimalField(max_digits=5, decimal_places=2, verbose_name='价格')
+    count = models.IntegerField(verbose_name='数量')
+
+    class Meta:
+        verbose_name = '订单详情'
+        verbose_name_plural = verbose_name
+
+    def __unicode__(self):
+        return self.goods.gtitle
